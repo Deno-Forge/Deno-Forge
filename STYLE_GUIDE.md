@@ -238,6 +238,40 @@ Avoid if the class mutates, validates, or needs internal logic.
 
 - If exported, it must be clearly marked `@internal` and **never exported in `mod.ts`**
 
+### 🌐 JSR Imports
+
+When importing from a module published to [jsr.io](https://jsr.io), do **not** include file extensions. JSR modules resolve paths based on entrypoint declarations and registry metadata.
+
+This ensures compatibility with JSR-aware tooling and matches the conventions of `@std` modules.
+
+When importing from local files or remote HTTP sources, always include the `.ts` extension to comply with ECMAScript module rules.
+
+Use **import maps** to manage external imports consistently across modules.
+
+### 🗺️ Deno Import Maps (`deno.jsonc`)
+
+All external dependencies—especially those from `@std`—must be mapped through the `imports` property in `deno.jsonc`.
+
+This ensures:
+- Predictable, version-pinned resolution across all files
+- Clean and portable `jsr:`-style imports without file extensions
+- Easier upgrades and module auditability
+
+#### 🔒 Rules
+
+- Always define external JSR imports in the `"imports"` section.
+- Do **not** hardcode `jsr:` paths in source files—use the aliases instead.
+- Keep import map aliases short and thematic (e.g. `@std/assert`, `@smith/test`).
+
+#### 🧱 Examples of good aliases
+
+- `@std/jsonc`
+- `@std/testing/mock`
+
+> 🔧 For Forge modules, use compact aliases:
+> - `@anvil` for `@deno-forge/anvil`
+> - `@scaffold` for `@deno-forge/scaffold`
+
 ---
 
 Happy forging. 🔨
